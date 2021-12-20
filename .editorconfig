@@ -1,3 +1,6 @@
 # Windows files
-[*.bat]
+[*.js]
 end_of_line = crlf
+tab_width = 2
+indent_size = 2
+

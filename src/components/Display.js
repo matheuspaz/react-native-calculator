@@ -19,7 +19,7 @@ export default props => {
   return (
     <View style={styles.display}>
       <Text style={styles.displayValue} numberOfLines={1}>
-        {props.label}
+        {props.value}
       </Text>
     </View>
   );

@@ -16,12 +16,13 @@ export default class App extends Component {
   state = { ...initialState };
 
   addDigit = n => {
-    if (n === '.' && this.state.displayValue.includes('.')) {
+    const clearDisplay =
+      this.state.displayValue === '0' || this.state.clearDisplay;
+
+    if (n === '.' && !clearDisplay && this.state.displayValue.includes('.')) {
       return;
     }
 
-    const clearDisplay =
-      this.state.displayValue === '0' || this.state.clearDisplay;
     const currentValue = clearDisplay ? '' : this.state.displayValue;
     const displayValue = `${currentValue}${n}`;
 
@@ -40,7 +41,28 @@ export default class App extends Component {
   };
 
   setOperation = operation => {
-    console.log(operation);
+    if (this.state.currentValueIndex === 0) {
+      this.setState({ operation, currentValueIndex: 1, clearDisplay: true });
+      return;
+    }
+
+    const equals = operation === '=';
+    const values = [...this.state.values];
+
+    try {
+      values[0] = eval(`${values[0]} ${this.state.operation} ${values[1]}`);
+    } catch {
+      values[0] = this.state.values[0];
+    }
+
+    values[1] = 0;
+    this.setState({
+      displayValue: `${values[0]}`,
+      operation: equals ? null : operation,
+      currentValueIndex: equals ? 0 : 1,
+      clearDisplay: true,
+      values,
+    });
   };
 
   render() {
@@ -53,18 +75,18 @@ export default class App extends Component {
           <Button label="7" onClick={this.addDigit} />
           <Button label="8" onClick={this.addDigit} />
           <Button label="9" onClick={this.addDigit} />
-          <Button label="*" operation onClick={this.addDigit} />
+          <Button label="*" operation onClick={this.setOperation} />
           <Button label="4" onClick={this.addDigit} />
           <Button label="5" onClick={this.addDigit} />
           <Button label="6" onClick={this.addDigit} />
-          <Button label="-" operation onClick={this.addDigit} />
+          <Button label="-" operation onClick={this.setOperation} />
           <Button label="1" onClick={this.addDigit} />
           <Button label="2" onClick={this.addDigit} />
           <Button label="3" onClick={this.addDigit} />
-          <Button label="+" operation onClick={this.addDigit} />
+          <Button label="+" operation onClick={this.setOperation} />
           <Button label="0" double onClick={this.addDigit} />
           <Button label="." onClick={this.addDigit} />
-          <Button label="=" operation onClick={this.addDigit} />
+          <Button label="=" operation onClick={this.setOperation} />
         </View>
       </View>
     );

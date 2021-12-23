@@ -40,7 +40,12 @@ export default props => {
   }
 
   return (
-    <TouchableHighlight onPress={() => props.onClick(props.label)}>
+    <TouchableHighlight
+      onPress={() => {
+        requestAnimationFrame(() => {
+          props.onClick(props.label);
+        });
+      }}>
       <Text style={stylesButton}>{props.label}</Text>
     </TouchableHighlight>
   );
